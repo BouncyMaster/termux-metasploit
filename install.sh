@@ -44,35 +44,22 @@ echo "Press CTRL + C if you Disagree / Cancel Install"
 read ENTER
 
 echo "####################################"
-apt install autoconf bison clang coreutils curl findutils git apr apr-util libffi-dev libgmp-dev libpcap-dev postgresql-dev readline-dev libsqlite-dev openssl-dev libtool libxml2-dev libxslt-dev ncurses-dev pkg-config postgresql-contrib wget make ruby-dev libgrpc-dev ncurses-utils termux-tools -y
+pkg install autoconf bison clang coreutils curl findutils git apr apr-util libffi libgmp libpcap postgresql readline libsqlite openssl libtool libxml2 libxslt ncurses pkg-config wget make ruby libgrpc ncurses-utils termux-tools -y
 echo "####################################"
 echo "Downloading & Extracting....."
 
 cd $HOME
-curl -LO https://github.com/rapid7/metasploit-framework/archive/4.16.4.tar.gz
-tar -xf $HOME/4.16.4.tar.gz
-mv $HOME/metasploit-framework-4.16.4 $HOME/metasploit-framework
+curl -LO https://github.com/rapid7/metasploit-framework/archive/6.0.9.tar.gz
+tar -xf $HOME/6.0.9.tar.gz
+mv $HOME/metasploit-framework-6.0.9 $HOME/metasploit-framework
 cd $HOME/metasploit-framework
 sed '/rbnacl/d' -i Gemfile.lock
 sed '/rbnacl/d' -i metasploit-framework.gemspec
-gem install bundler
+gem install bundler -v 1.17.3
 bundle config build.nokogiri --use-system-libraries
-
 
 gem install nokogiri -- --use-system-libraries
  
-sed 's|grpc (.*|grpc (1.4.1)|g' -i $HOME/metasploit-framework/Gemfile.lock
-gem unpack grpc -v 1.4.1
-cd grpc-1.4.1
-curl -LO https://raw.githubusercontent.com/grpc/grpc/v1.4.1/grpc.gemspec
-curl -L https://wiki.termux.com/images/b/bf/Grpc_extconf.patch -o extconf.patch
-patch -p1 < extconf.patch
-gem build grpc.gemspec
-gem install grpc-1.4.1.gem
-cd ..
-rm -r grpc-1.4.1
-
-
 cd $HOME/metasploit-framework
 bundle install -j5
 
